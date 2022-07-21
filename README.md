@@ -8,7 +8,7 @@ python -m pip install https://github.com/enielsen93/mikegraph/tarball/master
 ```
 
 
-<b>Example:</b>
+## Example:
 ```
 import mikegraph
 
