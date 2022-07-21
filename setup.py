@@ -16,7 +16,7 @@ setup(
     author_email='enielsen93@hotmail.com',
     license='BSD 2-clause',
     packages=['mikegraph'],
-    install_requires=['networker', 'networkx', 'arcpy', 'numpy'],
+    install_requires=['networker', 'networkx', 'numpy'],
     dependency_links=[
         'https://github.com/enielsen93/networker/tarball/master',
     ],

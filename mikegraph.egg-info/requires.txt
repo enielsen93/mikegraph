@@ -1,4 +1,3 @@
 networker
 networkx
-arcpy
 numpy
