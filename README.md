@@ -12,7 +12,7 @@ python -m pip install https://github.com/enielsen93/mikegraph/tarball/master
 ```
 import mikegraph
 
-graph = mikegraph.Graph(r"C:\Users\ELNN\OneDrive - Ramboll\Documents\Aarhus Vand\Kongelund og Marselistunnel\MIKE\KOM_002\KOM_002.mdb")
+graph = mikegraph.Graph(r"C:\MIKE Model.mdb")
 
 graph.map_network()
 
