@@ -70,6 +70,8 @@ class Graph:
                 hParA_dict[row[0]].reduction_factor = row[1]
                 hParA_dict[row[0]].concentration_time = row[2]
 
+        self.msm_HModA_without_ms_Catchment = []
+
         if self._is_mike_plus:
             with arcpy.da.SearchCursor(self._ms_Catchment,
                                        ['MUID', 'SHAPE@AREA', 'Area', 'Persons', "NetTypeNo", "ModelAImpArea",
@@ -117,12 +119,13 @@ class Graph:
 
             with arcpy.da.SearchCursor(self._msm_CatchCon, ["CatchID", "NodeID"]) as cursor:
                 for row in cursor:
-                    self.catchments_dict[row[0]].nodeID = row[1]
+                    if row[0] in self.catchments_dict:
+                        self.catchments_dict[row[0]].nodeID = row[1]
 
             with arcpy.da.SearchCursor(self._ms_Catchment, ['MUID', 'SHAPE@AREA', 'Area', 'Persons', "NetTypeNo"]) as cursor:
                 for row in cursor:
                     if row[0] not in self.catchments_dict:
-                        self.catchments_dict[row[0]] = self.catchments(row[0])
+                        self.catchments_dict[row[0]] = Catchment(row[0])
                     self.catchments_dict[row[0]].persons = row[3] if row[3] is not None else 0
                     self.catchments_dict[row[0]].area = row[2] * 1e4 if row[2] is not None else row[1]
                     self.catchments_dict[row[0]].nettypeno = row[4]
@@ -218,7 +221,7 @@ class Graph:
         return catchments
 
 if __name__ == "__main__":
-    graph = Graph(r"C:\Papirkurv\KOM_002.mdb")
+    graph = Graph(r"C:\Papirkurv\KOM_003.mdb")
 
     graph.map_network()
     targets = graph.find_upstream_nodes(["DU09"])
