@@ -221,7 +221,7 @@ class Graph:
         return catchments
 
 if __name__ == "__main__":
-    graph = Graph(r"C:\Papirkurv\KOM_002.mdb")
+    graph = Graph(r"C:\Papirkurv\KOM_003.mdb")
 
     graph.map_network()
     targets = graph.find_upstream_nodes(["DU09"])
