@@ -40,7 +40,8 @@ class Catchment:
 class Graph:
     def __init__(self, MU_database, ignore_regulations = False, useMaxInFlow = False, remove_edges = False, map_only = "links"):
         self._is_mike_plus = True if ".sqlite" in MU_database else False
-
+        
+        MU_database = MU_database.replace(r"\mu_Geometry","")
         self.network = networker.NetworkLinks(MU_database, map_only = map_only)
         self._msm_Link = os.path.join(MU_database, "msm_Link")
         self._msm_Node = os.path.join(MU_database, "msm_Node")
@@ -57,6 +58,7 @@ class Graph:
         self.useMaxInFlow = useMaxInFlow
         self.remove_edges = remove_edges
         self.network_mapped = False
+        self.maxInflow = {}
 
     graph = nx.DiGraph()
 
@@ -134,19 +136,16 @@ class Graph:
         self.graph = nx.DiGraph()
         for link in self.network.links.values():
             self.graph.add_edge(link.fromnode, link.tonode, weight = link.length)
-
-
-        maxInflow = {}
+            
         if self.useMaxInFlow:
             with arcpy.da.SearchCursor(self._msm_Node, ["MUID", "InletControlNo", "MaxInlet"],
                                        where_clause="[MaxInlet] IS NOT NULL AND [InletControlNo] = 0") as cursor:
                 for row in cursor:
-                    maxInflow[row[0]] = row[2]
+                    self.maxInflow[row[0]] = row[2]
 
         self._read_catchments()
 
         if not self.ignore_regulations:
-
             ms_TabD_dict = {}
             with arcpy.da.SearchCursor(self._ms_TabD, ["TabID", "value2"],
                                        where_clause="active = 1" if self._is_mike_plus else "") as cursor:
@@ -160,7 +159,7 @@ class Graph:
                     for row in cursor:
                         if row[1] in ms_TabD_dict:
                             node = self.network.links[row[0]].tonode
-                            maxInflow[node] = ms_TabD_dict[row[1]]
+                            self.maxInflow[node] = ms_TabD_dict[row[1]]
                             self.graph.remove_edge(self.network.links[row[0]].fromnode, self.network.links[row[0]].tonode)
 
             else:
@@ -168,11 +167,9 @@ class Graph:
                     for row in cursor:
                         if row[1] in ms_TabD_dict:
                             node = self.network.links[row[0]].tonode
-                            maxInflow[node] = ms_TabD_dict[row[1]]
+                            self.maxInflow[node] = ms_TabD_dict[row[1]]
                             self.graph.remove_edge(self.network.links[row[0]].fromnode,
                                                    self.network.links[row[0]].tonode)
-
-
         if self.remove_edges:
             outlets = []
             junctions = []
@@ -216,7 +213,7 @@ class Graph:
     def find_connected_catchments(self, nodes):
         catchments = []
         for catchment in self.catchments_dict.values():
-            if catchment.nodeID in nodes:
+            if catchment.nodeID and catchment.nodeID in nodes:
                 catchments.append(catchment)
         return catchments
 
