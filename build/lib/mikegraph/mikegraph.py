@@ -60,8 +60,6 @@ class Graph:
         self.network_mapped = False
         self.maxInflow = {}
 
-    graph = nx.DiGraph()
-
     def _read_catchments(self):
         self.catchments_dict = {}
 
@@ -200,6 +198,8 @@ class Graph:
         self.network_mapped = True
 
     def find_upstream_nodes(self, nodes):
+        if type(nodes) is str:
+            nodes = [nodes]
         if not self.network_mapped:
             self.map_network()
 
@@ -217,15 +217,30 @@ class Graph:
                 catchments.append(catchment)
         return catchments
 
+    def travel_time(self, source, target):
+        path = nx.shortest_path(self.graph, source, target)
+
+        travel_time = 0
+
+        for path_i in range(1, len(path)):
+            travel_time += [link for link in self.network.links.values()
+                            if link.fromnode == path[path_i - 1] and link.tonode == path[path_i]][0].travel_time
+            link = [link for link in self.network.links.values()
+                            if link.fromnode == path[path_i - 1] and link.tonode == path[path_i]][0]
+
+        return travel_time
+
 if __name__ == "__main__":
-    graph = Graph(r"C:\Papirkurv\KOM_003.mdb")
+    graf = Graph("C:\Users\ELNN\OneDrive - Ramboll\Documents\Aarhus Vand\Kongelund og Marselistunnel\MIKE\KOM_Plan_025\KOM_Plan_025_tangkrogen_opdim.mdb")
 
-    graph.map_network()
-    targets = graph.find_upstream_nodes(["DU09"])
-    graph.find_connected_catchments(targets[0])
-    [catchment.MUID for catchment in graph.find_connected_catchments(targets[0])]
+    graf.map_network()
 
-    catchments = []
-    for catchment in graph.catchments_dict.values():
-        if catchment.nodeID in targets[0]:
-            catchments.append(catchment.MUID)
+    print(graf.travel_time('O23119R',"O23114R"))
+    # targets = graph.find_upstream_nodes(["DU09"])
+    # graph.find_connected_catchments(targets[0])
+    # [catchment.MUID for catchment in graph.find_connected_catchments(targets[0])]
+
+    # catchments = []
+    # for catchment in graph.catchments_dict.values():
+    #     if catchment.nodeID in targets[0]:
+    #         catchments.append(catchment.MUID)
