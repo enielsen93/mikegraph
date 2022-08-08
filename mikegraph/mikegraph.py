@@ -230,10 +230,31 @@ class Graph:
 
         return travel_time
 
+    def trace_between(self, nodes):
+        links_in_path = set()
+        nodes_in_path = set()
+        for source in nodes:
+            for target in nodes:
+                if nx.has_path(self.graph, source, target):
+                    path = nx.shortest_path(self.graph, source, target)
+                elif nx.has_path(self.graph, target, source):
+                    path = nx.shortest_path(self.graph, target, source)
+                else:
+                    path = None
+                if path:
+                    for path_i in range(1, len(path)):
+                        links_in_path.add([link.MUID for link in self.network.links.values()
+                         if link.fromnode == path[path_i - 1] and link.tonode == path[path_i]][0])
+                        nodes_in_path.add(path[path_i - 1])
+                        nodes_in_path.add(path[path_i])
+        return nodes_in_path, links_in_path
+
 if __name__ == "__main__":
     graf = Graph("C:\Users\ELNN\OneDrive - Ramboll\Documents\Aarhus Vand\Kongelund og Marselistunnel\MIKE\KOM_Plan_025\KOM_Plan_025_tangkrogen_opdim.mdb")
 
     graf.map_network()
+
+    print(graf.trace_between(["O05930R", "O23910R"]))
 
     print(graf.travel_time('O23119R',"O23114R"))
     # targets = graph.find_upstream_nodes(["DU09"])
