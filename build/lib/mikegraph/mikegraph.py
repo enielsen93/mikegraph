@@ -133,7 +133,10 @@ class Graph:
     def map_network(self):
         self.graph = nx.DiGraph()
         for link in self.network.links.values():
-            self.graph.add_edge(link.fromnode, link.tonode, weight = link.length)
+            if link.fromnode and link.tonode:
+                self.graph.add_edge(link.fromnode, link.tonode, weight = link.length)
+            else:
+                warnings.warn("Link %s is unconnected (%s-%s)" % (link.MUID, link.fromnode, link.tonode))
             
         if self.useMaxInFlow:
             with arcpy.da.SearchCursor(self._msm_Node, ["MUID", "InletControlNo", "MaxInlet"],
