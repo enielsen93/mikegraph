@@ -201,7 +201,7 @@ class Graph:
         self.network_mapped = True
 
     def find_upstream_nodes(self, nodes):
-        if type(nodes) is str:
+        if type(nodes) is str or type(nodes) is unicode:
             nodes = [nodes]
         if not self.network_mapped:
             self.map_network()
@@ -253,17 +253,17 @@ class Graph:
         return nodes_in_path, links_in_path
 
 if __name__ == "__main__":
-    graf = Graph(r"C:\Users\ELNN\OneDrive - Ramboll\Documents\RWA2022N00174\Model\VOR_Plan_023\VOR_Plan_023.mdb")
+    graf = Graph(r"C:\Users\ELNN\OneDrive - Ramboll\Documents\Aarhus Vand\Kongelund og Marselistunnel\MIKE\KOM_Plan_042\KOM_Plan_042.mdb")
 
     graf.map_network()
 
     # print(graf.trace_between(["O05930R", "O23910R"]))
 
     # print(graf.travel_time('O23119R',"O23114R"))
-    targets = graf.find_upstream_nodes(["Node_163"])
+    targets = graf.find_upstream_nodes(["O39908R"])
     print(targets)
-    # graph.find_connected_catchments(targets[0])
-    # [catchment.MUID for catchment in graph.find_connected_catchments(targets[0])]
+    catchments = [graf.find_connected_catchments(target) for target in targets][0]
+    #[catchment.MUID for catchment in graph.find_connected_catchments(targets[0])]
 
     # catchments = []
     # for catchment in graph.catchments_dict.values():
