@@ -206,11 +206,13 @@ class Graph:
         if not self.network_mapped:
             self.map_network()
 
-        upstream_nodes = [[]]*len(nodes)
+        upstream_nodes = [[node] for node in nodes]
         for target_i, target in enumerate(nodes):
-            for source in self.graph.nodes:
-                if source in self.graph and target in self.graph and nx.has_path(self.graph, source, target):
-                    upstream_nodes[target_i].append(source)
+            # upstream_nodes[target_i].
+            if target in self.graph:
+                upstream_nodes[target_i] = upstream_nodes[target_i] + list(nx.ancestors(self.graph, target))
+            # if source in self.graph and target in self.graph and nx.has_path(self.graph, source, target):
+                #     upstream_nodes[target_i].append(source)
         return upstream_nodes
 
     def find_connected_catchments(self, nodes):
@@ -253,17 +255,17 @@ class Graph:
         return nodes_in_path, links_in_path
 
 if __name__ == "__main__":
-    graf = Graph(r"C:\Users\ELNN\OneDrive - Ramboll\Documents\Aarhus Vand\Kongelund og Marselistunnel\MIKE\KOM_Plan_042\KOM_Plan_042.mdb")
+    graf = Graph(r"C:\Users\ELNN\OneDrive - Ramboll\Documents\MOL\MOL_055_opdim.mdb")
 
     graf.map_network()
 
     # print(graf.trace_between(["O05930R", "O23910R"]))
 
     # print(graf.travel_time('O23119R',"O23114R"))
-    targets = graf.find_upstream_nodes(["O39908R"])
+    targets = graf.find_upstream_nodes(["FORSLAG05"])
     print(targets)
-    catchments = [graf.find_connected_catchments(target) for target in targets][0]
-    #[catchment.MUID for catchment in graph.find_connected_catchments(targets[0])]
+    # graph.find_connected_catchments(targets[0])
+    # [catchment.MUID for catchment in graph.find_connected_catchments(targets[0])]
 
     # catchments = []
     # for catchment in graph.catchments_dict.values():
