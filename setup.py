@@ -9,7 +9,7 @@ from setuptools import setup
 
 setup(
     name='mikegraph',
-    version='1.0.0',    
+    version='1.0.1',    
     description='Python Package for Graphing DHI MIKE URBAN database',
     url='https://github.com/enielsen93/mikegraph',
     author='Emil Nielsen',
