@@ -66,12 +66,19 @@ class Graph:
             self.maxInflow = {}
             self.map_only = map_only
         elif len(nodes_and_links) == 2:
-                msm_Node = nodes_and_links[0]
-                msm_Link = nodes_and_links[1]
+                self._msm_Node = nodes_and_links[0]
+                self._msm_Link = nodes_and_links[1]
                 fromnode_fieldname = "FROMNODE"
                 tonode_fieldname = "TONODE"
                 map_only = "links"
                 is_sqlite = False
+                self.network = networker.NetworkLinks(nodes_and_links = nodes_and_links)
+                self.ignore_regulations = True
+                self.useMaxInFlow = useMaxInFlow
+                self.remove_edges = remove_edges
+                self.network_mapped = False
+                self.maxInflow = {}
+                self.catchments_dict = {}
         else:
             raise (Exception(
                 "No MIKE Urban Database, or improper import nodes_and_links (must be list([nodes_filepath, links_filepath]))"))
@@ -185,7 +192,8 @@ class Graph:
                     for link in [l for l in self.network.links.values() if l.tonode == row[0]]:
                         self.graph.remove_edge(link.fromnode, link.tonode)
 
-        self._read_catchments()
+        if hasattr(self.network, "ms_Catchment"):
+            self._read_catchments()
 
         if not self.ignore_regulations:
             ms_TabD_dict = {}
