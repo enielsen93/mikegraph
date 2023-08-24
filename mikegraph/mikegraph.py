@@ -83,7 +83,7 @@ class Graph:
             raise (Exception(
                 "No MIKE Urban Database, or improper import nodes_and_links (must be list([nodes_filepath, links_filepath]))"))
 
-    def _read_catchments(self):
+    def _read_catchments(self, where_clause = ""):
         self.catchments_dict = {}
 
         hParA_dict = {}
@@ -146,7 +146,7 @@ class Graph:
                         self.catchments_dict[row[0]].nodeID = row[1]
 
             with arcpy.da.SearchCursor(self._ms_Catchment,
-                                       ['MUID', 'SHAPE@AREA', 'Area', 'Persons', "NetTypeNo"]) as cursor:
+                                       ['MUID', 'SHAPE@AREA', 'Area', 'Persons', "NetTypeNo"], where_clause = where_clause) as cursor:
                 for row in cursor:
                     if row[0] not in self.catchments_dict:
                         self.catchments_dict[row[0]] = Catchment(row[0])
@@ -192,8 +192,9 @@ class Graph:
                     for link in [l for l in self.network.links.values() if l.tonode == row[0]]:
                         self.graph.remove_edge(link.fromnode, link.tonode)
 
-        if hasattr(self.network, "ms_Catchment"):
+        if hasattr(self, "_ms_Catchment"):
             self._read_catchments()
+            print("Reading Catchments")
 
         if not self.ignore_regulations:
             ms_TabD_dict = {}
@@ -311,19 +312,18 @@ class Graph:
 
 if __name__ == "__main__":
     graf = Graph(
-        r"C:\Users\ELNN\OneDrive - Ramboll\Documents\Aarhus Vand\Lisbjerg\Model\LIS_008\LIS_008.mdb",
-                 map_only="links weirs")
+        r"C:\Users\ELNN\OneDrive - Ramboll\Documents\Aarhus Vand\Soenderhoej\MIKE\MIKE_URBAN\SON_022\SON_022.mdb", ignore_regulations = True)
 
     graf.map_network()
-
+    graf._read_catchments()
     # print(graf.trace_between(["O05930R", "O23910R"]))
 
     # print(graf.travel_time('O23119R',"O23114R"))
-    targets = graf.find_upstream_nodes(["C43056R"])
+    targets = graf.find_upstream_nodes(["NIR231R"])
     print(targets)
-    # graph.find_connected_catchments(targets[0])
+    catchments = graf.find_connected_catchments(targets[0])
+    print(catchments)
     # [catchment.MUID for catchment in graph.find_connected_catchments(targets[0])]
-
     # catchments = []
     # for catchment in graph.catchments_dict.values():
     #     if catchment.nodeID in targets[0]:
