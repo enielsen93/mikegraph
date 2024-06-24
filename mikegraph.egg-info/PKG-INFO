@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: mikegraph
-Version: 1.0.0
+Version: 1.0.1
 Summary: Python Package for Graphing DHI MIKE URBAN database
 Home-page: https://github.com/enielsen93/mikegraph
 Author: Emil Nielsen
