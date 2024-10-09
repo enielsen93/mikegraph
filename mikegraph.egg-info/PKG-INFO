@@ -1,4 +1,4 @@
-Metadata-Version: 1.1
+Metadata-Version: 2.1
 Name: mikegraph
 Version: 1.0.1
 Summary: Python Package for Graphing DHI MIKE URBAN database
@@ -6,8 +6,6 @@ Home-page: https://github.com/enielsen93/mikegraph
 Author: Emil Nielsen
 Author-email: enielsen93@hotmail.com
 License: BSD 2-clause
-Description: UNKNOWN
-Platform: UNKNOWN
 Classifier: Development Status :: 1 - Planning
 Classifier: Intended Audience :: Science/Research
 Classifier: License :: OSI Approved :: BSD License

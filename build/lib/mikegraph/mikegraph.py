@@ -140,10 +140,6 @@ class Graph:
                         self.catchments_dict[row[0]].reduction_factor = 0
                         warnings.warn("%s not found in msm_HParA" % (row[2]))
 
-            with arcpy.da.SearchCursor(self._msm_CatchCon, ["CatchID", "NodeID"]) as cursor:
-                for row in cursor:
-                    if row[0] in self.catchments_dict:
-                        self.catchments_dict[row[0]].nodeID = row[1]
 
             with arcpy.da.SearchCursor(self._ms_Catchment,
                                        ['MUID', 'SHAPE@AREA', 'Area', 'Persons', "NetTypeNo"], where_clause = where_clause) as cursor:
@@ -153,6 +149,11 @@ class Graph:
                     self.catchments_dict[row[0]].persons = row[3] if row[3] is not None else 0
                     self.catchments_dict[row[0]].area = row[2] * 1e4 if row[2] is not None else row[1]
                     self.catchments_dict[row[0]].nettypeno = row[4]
+
+            with arcpy.da.SearchCursor(self._msm_CatchCon, ["CatchID", "NodeID"]) as cursor:
+                for row in cursor:
+                    if row[0] in self.catchments_dict:
+                        self.catchments_dict[row[0]].nodeID = row[1]
 
     def map_network(self):
         self.graph = nx.DiGraph()
@@ -223,8 +224,13 @@ class Graph:
                             node = self.network.links[row[0]].tonode
                             self.maxInflow[node] = self.maxInflow[node] + ms_TabD_dict[
                                 row[1]] if node in self.maxInflow else ms_TabD_dict[row[1]]
-                            self.graph.remove_edge(self.network.links[row[0]].fromnode,
-                                                   self.network.links[row[0]].tonode)
+                            try:
+                                self.graph.remove_edge(self.network.links[row[0]].fromnode,
+                                                       self.network.links[row[0]].tonode)
+                            except Exception as e:
+                                warnings.warn("Could not remove link %s-%s" % (self.network.links[row[0]].fromnode,
+                                                       self.network.links[row[0]].tonode))
+                                                   
         if self.remove_edges:
             outlets = []
             junctions = []
