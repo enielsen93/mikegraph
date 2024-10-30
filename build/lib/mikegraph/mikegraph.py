@@ -191,7 +191,10 @@ class Graph:
                 for row in cursor:
                     self.maxInflow[row[0]] = self.maxInflow[row[0]] + row[2] if row[0] in self.maxInflow else row[2]
                     for link in [l for l in self.network.links.values() if l.tonode == row[0]]:
-                        self.graph.remove_edge(link.fromnode, link.tonode)
+                        try:
+                            self.graph.remove_edge(link.fromnode, link.tonode)
+                        except Exception as e:
+                            pass
 
         if hasattr(self, "_ms_Catchment"):
             self._read_catchments()
@@ -318,7 +321,7 @@ class Graph:
 
 if __name__ == "__main__":
     graf = Graph(
-        r"C:\Users\ELNN\OneDrive - Ramboll\Documents\Aarhus Vand\Soenderhoej\MIKE\MIKE_URBAN\SON_022\SON_022.mdb", ignore_regulations = True)
+        r"C:\Users\elnn\OneDrive - Ramboll\Documents\Aarhus Vand\Soenderhoej\MIKE\MIKE_URBAN\SON_053\SON_053.mdb", ignore_regulations = True, useMaxInFlow = True)
 
     graf.map_network()
     graf._read_catchments()
