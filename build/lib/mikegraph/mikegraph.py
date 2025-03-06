@@ -178,12 +178,12 @@ class Graph:
                 else:
                     warnings.warn("Weir %s is unconnected (%s-%s)" % (link.MUID, link.fromnode, link.tonode))
 
-        if hasattr(self.network, 'orifice'):
+        if hasattr(self.network, 'orifices'):
             for link in self.network.orifices.values():
                 if link.fromnode and link.tonode:
                     self.graph.add_edge(link.fromnode, link.tonode, weight=link.length)
                 else:
-                    warnings.warn("Weir %s is unconnected (%s-%s)" % (link.MUID, link.fromnode, link.tonode))
+                    warnings.warn("Orifice %s is unconnected (%s-%s)" % (link.MUID, link.fromnode, link.tonode))
 
         if self.useMaxInFlow:
             with arcpy.da.SearchCursor(self._msm_Node, ["MUID", "InletControlNo", "MaxInlet"],
@@ -210,7 +210,7 @@ class Graph:
 
             if self._is_mike_plus:
                 with arcpy.da.SearchCursor(self._msm_Link, ["MUID", "FunctionID"],
-                                           where_clause="regulationtypeno = 1 AND FunctionID IS NOT NULL") as cursor:
+                                           where_clause="regulationtypeno = 1 AND FunctionID IS NOT NULL and FlowRegNo = 1") as cursor:
                     for row in cursor:
                         if row[1] in ms_TabD_dict:
                             node = self.network.links[row[0]].tonode
@@ -321,17 +321,17 @@ class Graph:
 
 if __name__ == "__main__":
     graf = Graph(
-        r"C:\Users\elnn\OneDrive - Ramboll\Documents\Aarhus Vand\Soenderhoej\MIKE\MIKE_URBAN\SON_053\SON_053.mdb", ignore_regulations = True, useMaxInFlow = True)
+        r"C:\Users\elnn\OneDrive - Ramboll\Documents\Aarhus Vand\Vesterbro Torv\MIKE_URBAN\VBT_STATUS_011\VBT_STATUS_011.sqlite", ignore_regulations = False, useMaxInFlow = True, map_only = "")
 
     graf.map_network()
-    graf._read_catchments()
-    # print(graf.trace_between(["O05930R", "O23910R"]))
+    # graf._read_catchments()
+    print(graf.find_upstream_nodes("P50901K"))
 
     # print(graf.travel_time('O23119R',"O23114R"))
-    targets = graf.find_upstream_nodes(["NIR231R"])
-    print(targets)
-    catchments = graf.find_connected_catchments(targets[0])
-    print(catchments)
+    # targets = graf.find_upstream_nodes(["NIR231R"])
+    # print(targets)
+    # catchments = graf.find_connected_catchments(targets[0])
+    # print(catchments)
     # [catchment.MUID for catchment in graph.find_connected_catchments(targets[0])]
     # catchments = []
     # for catchment in graph.catchments_dict.values():
