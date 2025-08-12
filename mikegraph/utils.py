@@ -1,5 +1,5 @@
 """
-Utils module for MikeTools
+Utils module for mikegraph
 """
 import numpy as np
 

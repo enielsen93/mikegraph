@@ -1,5 +1,5 @@
 """
-Timearea module for MikeTools
+Timearea module for mikegraph
 """
 import mikegraph
 from io import StringIO

@@ -1,5 +1,5 @@
 """
-Network module for MikeTools
+Network module for mikegraph
 """
 
 import os

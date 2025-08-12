@@ -1,5 +1,5 @@
 """
-Graph module for MikeTools
+Graph module for mikegraph
 """
 import networkx as nx
 import os
