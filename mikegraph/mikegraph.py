@@ -4,6 +4,7 @@ import os
 import arcpy
 import numpy as np
 import warnings
+import sys
 
 
 class HParA:
@@ -265,7 +266,7 @@ class Graph:
         self.network_mapped = True
 
     def find_upstream_nodes(self, nodes):
-        if type(nodes) is str or type(nodes) is unicode:
+        if type(nodes) is str or (sys.version_info[0] < 3 and type(nodes) is unicode):
             nodes = [nodes]
         if not self.network_mapped:
             self.map_network()
