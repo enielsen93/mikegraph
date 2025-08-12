@@ -16,7 +16,7 @@ Key Features:
 
 # Import main classes
 from .graph import Graph
-from .timearea import TimeArea
+from .timearea import TimeAreaAnalyzer
 from .network import PipeNetwork
 from .utils import calculate_full_flow
 
@@ -30,7 +30,7 @@ __url__ = "https://github.com/enielsen93/miketools"
 # Define what gets imported with "from miketools import *"
 __all__ = [
     "Graph",
-    "TimeArea", 
+    "TimeArea",
     "PipeNetwork",
     "calculate_full_flow"
 ]
