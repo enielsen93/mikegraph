@@ -1,10 +1,10 @@
-# miketools
+# mikegraph
  Python toolkit for hydraulic network analysis and catchment modeling with MIKE+ databases
 
 <b>To install:</b>
 
 ```
-python -m pip install https://github.com/enielsen93/miketools/tarball/master
+python -m pip install https://github.com/enielsen93/mikegraph/tarball/master
 ```
 
 
