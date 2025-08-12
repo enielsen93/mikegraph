@@ -2,14 +2,14 @@
 from setuptools import setup
 
 setup(
-    name='miketools',
+    name='mikegraph',
     version='2.0.0',
     description='Python toolkit for hydraulic network analysis and catchment modeling with MIKE+ databases',
-    url='https://github.com/enielsen93/miketools',
+    url='https://github.com/enielsen93/mikegraph',
     author='Emil Nielsen',
     author_email='enielsen93@hotmail.com',
     license='BSD 2-clause',
-    packages=['miketools'],
+    packages=['mikegraph'],
     install_requires=['networkx', 'numpy', 'pandas'],
     dependency_links=[
         'https://github.com/enielsen93/networker/tarball/master',
