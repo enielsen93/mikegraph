@@ -1,11 +1,12 @@
-import networker
+"""
+Graph module for MikeTools
+"""
 import networkx as nx
 import os
 import arcpy
 import numpy as np
 import warnings
 import sys
-
 
 class HParA:
     reduction_factor = None
@@ -41,8 +42,30 @@ class Catchment:
         return self.area * self.imperviousness / 1e2 * self.reduction_factor
 
 
-class Graph:
-    def __init__(self, MU_database = None, nodes_and_links = None, ignore_regulations=False, useMaxInFlow=False, remove_edges=False, map_only="links"):
+class MikeNetwork:
+    """
+    Create and analyze network graphs from MIKE+ databases.
+
+    This class converts MIKE+ hydraulic database structures into NetworkX-compatible
+    graph objects, enabling network analysis of stormwater and wastewater systems.
+
+    Parameters:
+        MU_database (str, optional): Path to the MIKE+ database file (.sqlite or .mdb)
+        nodes_and_links (dict, optional): Pre-loaded nodes and links data
+        ignore_regulations (bool): Whether to ignore flow regulations. Defaults to False.
+        useMaxInFlow (bool): Use maximum inflow values. Defaults to False.
+        remove_edges (bool): Remove certain edge types. Defaults to False.
+        map_only (str): Which elements to map. Defaults to "links".
+
+    Attributes:
+        database_path (str): Path to the source database
+        graph (networkx.Graph): The network graph object
+
+    Example:
+        >>> network = MikeNetwork("stormwater_model.mdb")
+    """
+    def __init__(self, MU_database=None, nodes_and_links=None, ignore_regulations=False, useMaxInFlow=False,
+                 remove_edges=False, map_only="links"):
         if MU_database:
             self._is_mike_plus = True if ".sqlite" in MU_database else False
 
@@ -67,24 +90,24 @@ class Graph:
             self.maxInflow = {}
             self.map_only = map_only
         elif len(nodes_and_links) == 2:
-                self._msm_Node = nodes_and_links[0]
-                self._msm_Link = nodes_and_links[1]
-                fromnode_fieldname = "FROMNODE"
-                tonode_fieldname = "TONODE"
-                map_only = "links"
-                is_sqlite = False
-                self.network = networker.NetworkLinks(nodes_and_links = nodes_and_links)
-                self.ignore_regulations = True
-                self.useMaxInFlow = useMaxInFlow
-                self.remove_edges = remove_edges
-                self.network_mapped = False
-                self.maxInflow = {}
-                self.catchments_dict = {}
+            self._msm_Node = nodes_and_links[0]
+            self._msm_Link = nodes_and_links[1]
+            fromnode_fieldname = "FROMNODE"
+            tonode_fieldname = "TONODE"
+            map_only = "links"
+            is_sqlite = False
+            self.network = networker.NetworkLinks(nodes_and_links=nodes_and_links)
+            self.ignore_regulations = True
+            self.useMaxInFlow = useMaxInFlow
+            self.remove_edges = remove_edges
+            self.network_mapped = False
+            self.maxInflow = {}
+            self.catchments_dict = {}
         else:
             raise (Exception(
                 "No MIKE Urban Database, or improper import nodes_and_links (must be list([nodes_filepath, links_filepath]))"))
 
-    def _read_catchments(self, where_clause = ""):
+    def _read_catchments(self, where_clause=""):
         self.catchments_dict = {}
 
         hParA_dict = {}
@@ -141,9 +164,9 @@ class Graph:
                         self.catchments_dict[row[0]].reduction_factor = 0
                         warnings.warn("%s not found in msm_HParA" % (row[2]))
 
-
             with arcpy.da.SearchCursor(self._ms_Catchment,
-                                       ['MUID', 'SHAPE@AREA', 'Area', 'Persons', "NetTypeNo"], where_clause = where_clause) as cursor:
+                                       ['MUID', 'SHAPE@AREA', 'Area', 'Persons', "NetTypeNo"],
+                                       where_clause=where_clause) as cursor:
                 for row in cursor:
                     if row[0] not in self.catchments_dict:
                         self.catchments_dict[row[0]] = Catchment(row[0])
@@ -233,8 +256,8 @@ class Graph:
                                                        self.network.links[row[0]].tonode)
                             except Exception as e:
                                 warnings.warn("Could not remove link %s-%s" % (self.network.links[row[0]].fromnode,
-                                                       self.network.links[row[0]].tonode))
-                                                   
+                                                                               self.network.links[row[0]].tonode))
+
         if self.remove_edges:
             outlets = []
             junctions = []
@@ -322,7 +345,8 @@ class Graph:
 
 if __name__ == "__main__":
     graf = Graph(
-        r"C:\Users\elnn\OneDrive - Ramboll\Documents\Aarhus Vand\Vesterbro Torv\MIKE_URBAN\VBT_STATUS_011\VBT_STATUS_011.sqlite", ignore_regulations = False, useMaxInFlow = True, map_only = "")
+        r"C:\Users\elnn\OneDrive - Ramboll\Documents\Aarhus Vand\Vesterbro Torv\MIKE_URBAN\VBT_STATUS_011\VBT_STATUS_011.sqlite",
+        ignore_regulations=False, useMaxInFlow=True, map_only="")
 
     graf.map_network()
     # graf._read_catchments()

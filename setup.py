@@ -1,22 +1,16 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Tue Mar 22 15:52:11 2022
-
-@author: ELNN
-"""
-
 from setuptools import setup
 
 setup(
-    name='mikegraph',
-    version='1.0.2',    
-    description='Python Package for Graphing DHI MIKE URBAN database',
-    url='https://github.com/enielsen93/mikegraph',
+    name='miketools',
+    version='2.0.0',
+    description='Python toolkit for hydraulic network analysis and catchment modeling with MIKE+ databases',
+    url='https://github.com/enielsen93/miketools',
     author='Emil Nielsen',
     author_email='enielsen93@hotmail.com',
     license='BSD 2-clause',
-    packages=['mikegraph'],
-    install_requires=['networker', 'networkx', 'numpy'],
+    packages=['miketools'],
+    install_requires=['networkx', 'numpy', 'pandas', 'arcpy'],
     dependency_links=[
         'https://github.com/enielsen93/networker/tarball/master',
     ],
