@@ -30,7 +30,7 @@ __url__ = "https://github.com/enielsen93/miketools"
 # Define what gets imported with "from miketools import *"
 __all__ = [
     "Graph",
-    "TimeArea",
+    "TimeAreaAnalyzer",
     "PipeNetwork",
     "calculate_full_flow"
 ]
