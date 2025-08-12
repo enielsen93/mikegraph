@@ -1,9 +1,0 @@
-README.md
-setup.py
-mikegraph/__init__.py
-mikegraph/mikegraph.py
-mikegraph.egg-info/PKG-INFO
-mikegraph.egg-info/SOURCES.txt
-mikegraph.egg-info/dependency_links.txt
-mikegraph.egg-info/requires.txt
-mikegraph.egg-info/top_level.txt

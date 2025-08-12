@@ -1,5 +1,5 @@
 """
-MikeTools - Python toolkit for hydraulic network analysis with MIKE+ databases
+MikeGraph - Python toolkit for hydraulic network analysis with MIKE+ databases
 
 A comprehensive toolkit for hydraulic engineers and water management professionals
 working with MIKE+ databases. Provides tools for network analysis, catchment modeling,
@@ -25,9 +25,9 @@ __version__ = "2.0.0"
 __author__ = "Emil Nielsen"
 __email__ = "enielsen93@hotmail.com"
 __description__ = "Python toolkit for hydraulic network analysis with MIKE+ databases"
-__url__ = "https://github.com/enielsen93/miketools"
+__url__ = "https://github.com/enielsen93/mikegraph"
 
-# Define what gets imported with "from miketools import *"
+# Define what gets imported with "from mikegraph import *"
 __all__ = [
     "Graph",
     "TimeAreaAnalyzer",
