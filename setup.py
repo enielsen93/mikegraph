@@ -10,7 +10,7 @@ setup(
     author_email='enielsen93@hotmail.com',
     license='BSD 2-clause',
     packages=['miketools'],
-    install_requires=['networkx', 'numpy', 'pandas', 'arcpy'],
+    install_requires=['networkx', 'numpy', 'pandas'],
     dependency_links=[
         'https://github.com/enielsen93/networker/tarball/master',
     ],

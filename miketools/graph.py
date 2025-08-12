@@ -7,6 +7,7 @@ import arcpy
 import numpy as np
 import warnings
 import sys
+from .network import PipeNetwork
 
 class HParA:
     reduction_factor = None
@@ -70,7 +71,7 @@ class MikeNetwork:
             self._is_mike_plus = True if ".sqlite" in MU_database else False
 
             MU_database = MU_database.replace(r"\mu_Geometry", "")
-            self.network = networker.NetworkLinks(MU_database, map_only=map_only)
+            self.network = PipeNetwork(MU_database, map_only=map_only)
             self._msm_Link = os.path.join(MU_database, "msm_Link")
             self._msm_Node = os.path.join(MU_database, "msm_Node")
             self._msm_Orifice = os.path.join(MU_database, "msm_Orifice")
@@ -96,7 +97,7 @@ class MikeNetwork:
             tonode_fieldname = "TONODE"
             map_only = "links"
             is_sqlite = False
-            self.network = networker.NetworkLinks(nodes_and_links=nodes_and_links)
+            self.network = PipeNetwork(nodes_and_links=nodes_and_links)
             self.ignore_regulations = True
             self.useMaxInFlow = useMaxInFlow
             self.remove_edges = remove_edges

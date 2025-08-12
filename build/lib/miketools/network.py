@@ -8,6 +8,7 @@ import arcpy.da
 import numpy as np
 import re
 from scipy.spatial import cKDTree
+from .utils import calculate_full_flow
 
 class PipeNetwork:
     """
