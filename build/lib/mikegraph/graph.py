@@ -345,7 +345,7 @@ class MikeNetwork:
 
 
 if __name__ == "__main__":
-    graf = Graph(
+    graf = MikeNetwork(
         r"C:\Users\elnn\OneDrive - Ramboll\Documents\Aarhus Vand\Vesterbro Torv\MIKE_URBAN\VBT_STATUS_011\VBT_STATUS_011.sqlite",
         ignore_regulations=False, useMaxInFlow=True, map_only="")
 

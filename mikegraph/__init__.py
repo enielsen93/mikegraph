@@ -15,7 +15,7 @@ Key Features:
 """
 
 # Import main classes
-from .graph import Graph
+from .graph import MikeNetwork
 from .timearea import TimeAreaAnalyzer
 from .network import PipeNetwork
 from .utils import calculate_full_flow
